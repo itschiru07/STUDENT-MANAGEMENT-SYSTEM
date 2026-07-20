@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from students.models import Student
 from .serializers import (
@@ -45,3 +46,21 @@ class StudentRetrieveUpdateDestroyAPI(
         if self.request.method in ["PUT", "PATCH"]:
             return StudentWriteSerializer
         return StudentSerializer
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    permission_classes = []  # No authentication needed to get token
+
+    def get(self, request, *args, **kwargs):
+        username = request.query_params.get("username")
+        password = request.query_params.get("password")
+        if username and password:
+            serializer = self.get_serializer(data={"username": username, "password": password})
+            try:
+                serializer.is_valid(raise_exception=True)
+                return Response(serializer.validated_data)
+            except Exception as e:
+                return Response({"error": str(e)}, status=400)
+        return Response({
+            "message": "To obtain a token, send a POST request with 'username' and 'password', or query via GET with ?username=xxx&password=yyy"
+        })
