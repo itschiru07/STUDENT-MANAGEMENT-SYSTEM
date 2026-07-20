@@ -1,22 +1,39 @@
-function Navbar(){
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-    return(
+function Navbar() {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  }
 
-        <nav className="navbar navbar-dark bg-dark">
+ return (
+
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
 
             <div className="container-fluid">
 
-                <span className="navbar-brand">
+                <span className="navbar-brand fw-bold">
 
-                    Student Management
+                    🎓 Student Management
 
                 </span>
+
+                <button
+                    className="btn btn-danger"
+                    onClick={handleLogout}
+                >
+                    Logout
+                </button>
 
             </div>
 
         </nav>
 
-    )
+    );
 
 }
 

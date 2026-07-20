@@ -1,29 +1,17 @@
-import { createContext, useState, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState } from "react";
 import api from "../api/axios";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 
-    const [user, setUser] = useState(null);
-
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-
+    const [user, setUser] = useState(() => {
         const token = localStorage.getItem("access");
+        return token ? { token } : null;
+    });
 
-        if (token) {
-
-            setUser({
-                token: token
-            });
-
-        }
-
-        setLoading(false);
-
-    }, []);
+    const [loading] = useState(false);
 
     const login = async (username, password) => {
 
