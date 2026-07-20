@@ -2,6 +2,7 @@ from rest_framework import serializers
 from students.models import Student, Department,course
 from accounts.models import CustomUser
 from rest_framework import generics
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -69,3 +70,19 @@ class StudentWriteSerializer(serializers.ModelSerializer):
             "department",
             "courses",
         ]
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+        data["user"] = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "firstname": user.first_name,
+            "lastname": user.last_name,
+            "phone": user.phone,
+            "role": user.role,
+        }
+        return data

@@ -8,6 +8,7 @@ from students.models import Student
 from .serializers import (
     StudentSerializer,
     StudentWriteSerializer,
+    CustomTokenObtainPairSerializer,
 )
 
 
@@ -50,6 +51,7 @@ class StudentRetrieveUpdateDestroyAPI(
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = []  # No authentication needed to get token
+    serializer_class = CustomTokenObtainPairSerializer
 
     def get(self, request, *args, **kwargs):
         username = request.query_params.get("username")
